@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Info_book</title>
+    <style>
+    *{
+        margin: 5px;
+    }
+    .wallpaper{
+        margin: 0 auto;
+        width: 1000px;
+        background-image: linear-gradient(rgb(227, 251, 255), white);
+        padding: 10px;
+    }
+    .view_book{
+        display: inline-block;
+    }
+    .favoriteusers{
+        vertical-align: top;
+        display: inline-block;
+    }
+    </style>
+</head>
+<body>
+    <div class="wallpaper">
+        {% if messages %}
+            <ul class="messages">
+        {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+            </ul>
+        {% endif %}
+        <h1>Welcome, {{user.first_name}}.</h1>
+        <a href="/books">Go back to books page</a><br>
+        <div class="view_book">
+            <p> Title: {{book.title}} </p>
+            <p>Added: {{book.uploaded_by.first_name}}</p>
+            <p>Added on: {{book.created_at}}</p>
+            <p>Last updated: {{book.updated_at}}</p>
+            <p>Description: {{book.desc}}</p><br>
+        </div>
+        <div class="favoriteusers">
+            <h2>Users Who Liked This Book:</h2>
+            <ul>
+                {% for likeUser in likedBooks %}
+                <li>{{likeUser.first_name}}</li>
+                {% endfor %}
+                <a href="/add_to_favorite/{{book.id}}">Add To favorite</a>
+            </ul>
+        </div>
+    </div>
+    </body>
+    </html>

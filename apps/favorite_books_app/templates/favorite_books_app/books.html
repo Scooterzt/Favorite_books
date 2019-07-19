@@ -7,7 +7,7 @@
     <title>Books</title>
     <style>
         *{
-            margin: 2px;
+            margin: 0px;
         }
         body{
             margin-top:  20px;
@@ -21,15 +21,53 @@
         p{
             font-family: Arial, Helvetica, sans-serif;
             display: inline-block;
+            margin: 3px;
+        }
+        .add_book{
+            vertical-align: top;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .display_book{
+            vertical-align: top;
+            display: inline-block;
+            margin-left: 50px;
         }
     </style>
 </head>
 <body>
     <div class="wallpaper">
-            <h1>Welcome, {{user.first_name}}.</h1>
-            <a href="/log_out"> --> Log Out</a>
-
-
+        <h1>Welcome, {{user.first_name}}.</h1>
+        <a href="/log_out"> --> Log Out</a><br>
+        <div class="add_book">
+            {% if messages %}
+            <ul class="messages">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+            <form action="/books/add_book" method="POST">
+                {% csrf_token %}
+                <p> Title: </p> 
+                <input type="text" name="title" ><br>
+                <p> Description: </p><br>
+                <textarea name="description" cols="30" rows="5"></textarea><br>
+                <button type="submit" style="width: 100px">Create</button>
+            </form>
+        </div>
+        <div class="display_book">
+            <h3>All Books</h3>
+            {% for book in books %}
+                {% if user.id == book.uploaded_by.id %}
+                    <a href="/books/{{book.id}}"><p>{{book.title}}</p></a><br>
+                {% else %}
+                    <a href="/books/book_info/{{book.id}}"><p>{{book.title}}</p></a><br>
+                {% endif %}
+                <p>(added by {{book.uploaded_by.first_name}})</p><br>
+                <br>
+            {% endfor %}
+        </div>
     </div>
 </body>
 </html>

@@ -32,6 +32,16 @@ class UserManager(models.Manager):
         if not bcrypt.checkpw(postData["password"].encode(), user.password.encode()):
             errors["password"] = "Password or Email not matching our Database"
         return errors
+        
+class bookManager(models.Manager):
+    def books_validator(self, postData):
+        errors = {}
+        if len(postData["title"]) < 1:
+            errors["book_title"] = "seriously, do you want to add a book without a title?"
+        if len(postData["description"]) < 5:
+            errors["book_descripton"] = "Pretty short description, try again. I think at least 5 will be ok)"
+        return errors
+
 
 class User(models.Model):
     first_name = models.CharField(max_length=255)
@@ -44,3 +54,15 @@ class User(models.Model):
 
     def __repr__(self):
         return f"<User object: {self.first_name} ({self.id})"
+
+class Book(models.Model):
+    title = models.CharField(max_length=255)
+    desc = models.TextField(max_length=1000)
+    uploaded_by = models.ForeignKey(User, related_name="uploaded_books", null=True)
+    liked_books = models.ManyToManyField(User, related_name="favorite_books")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = bookManager()
+
+    def __repr__(self):
+        return f"<Book object: {self.title} ({self.id})"
